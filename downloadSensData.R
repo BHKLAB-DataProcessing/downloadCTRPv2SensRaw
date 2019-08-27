@@ -1,8 +1,7 @@
 library(downloader)
 library(PharmacoGxPrivate)
 library(devtools)
-library(pbapply)
-library(data.table)
+
 
 options(stringsAsFactors=FALSE)
 badchars <- "[\xb5]|[]|[ ,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[\\]|[.]|[_]|[ ]|[(]|[)]"
@@ -134,56 +133,15 @@ sensitivityInfo[,"media_composition"] <- mediaInfo$media_composition[match(sensi
 rownames(sensitivityInfo) <- sensitivityInfo$experimentIds
 
 
-#######organize sensitivity array#######
-
- sensRaw.dt <- as.data.table(ctrp.sensitivityRaw[,c("experimentIds", "cpd_conc_umol","cpd_avg_pv")])
-  
-  library(parallel)
-  
-  #options("mc.cores"=nthread)
-  
-  values <- mclapply(sensitivityInfo$experimentIds, function(x, sensRaw.dt) {
-    
-    data <- sensRaw.dt[experimentIds ==x]
-    
-    # data <- data[order(data$Concentration),]
-    
-    return(data)
-    
-  }, sensRaw.dt=sensRaw.dt)
-  
-  concList <- (unlist(pblapply(values, nrow)))
-  
-  ncon <- max(concList)
+load("/pfs/ctrpv2raw/ctrp_raw.RData")
   
   
-  sensitivityRaw = array(data=NA, dim=c(nrow(sensitivityInfo), ncon, 2), dimnames=list(rownames(sensitivityInfo), paste(rep("dose", times=ncon), 1:ncon, sep=""), c("Dose","Viability")))
+raw.sensitivity <- sensitivityRaw
+                                        
+sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
+                                        
   
-  names(values) <- sensitivityInfo$experimentIds
-  
-  for(n in 1:length(values)){
-    if (n %% 5000 == 0){
-      
-      print(paste("Experiment",n,"of",length(values)))
-      
-    }
-    
-    values[[n]][,experimentIds:=NULL]
-    # values[[n]][order("Concentration")]
-    
-    sensitivityRaw[n, 1:(nrow(values[[n]])), ] <- as.matrix(values[[n]])
-    
-  }
-  
-  # sensitivityRaw <- sensitivityRaw[,,c(2,1)]
-  # dimnames(sensitivityRaw)[[1]] <- c("Concentration", "Viability")
-  
-  sensitivityRaw[,,"Viability"] <- sensitivityRaw[,,"Viability"] *100
-  
-  
-  raw.sensitivity <- sensitivityRaw
-  
-  save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, file="/pfs/out/drug_post.RData")
+save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, conList, ncon, file="/pfs/out/drug_post.RData")
 
 
 raw.sensitivity.x <- parallel::splitIndices(nrow(raw.sensitivity), floor(nrow(raw.sensitivity)/1000))
