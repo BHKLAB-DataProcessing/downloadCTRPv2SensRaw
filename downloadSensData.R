@@ -141,7 +141,7 @@ raw.sensitivity <- sensitivityRaw
 sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
                                         
   
-save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, conList, ncon, file="/pfs/out/drug_post.RData")
+save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, concList, ncon, file="/pfs/out/drug_post.RData")
 
 
 raw.sensitivity.x <- parallel::splitIndices(nrow(raw.sensitivity), floor(nrow(raw.sensitivity)/1000))
