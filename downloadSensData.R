@@ -136,12 +136,12 @@ rownames(sensitivityInfo) <- sensitivityInfo$experimentIds
 load("/pfs/ctrpv2raw/ctrp_raw.RData")
   
   
-raw.sensitivity <- ctrp.sensitivityRaw
+raw.sensitivity <- sensitivityRaw
                                         
-sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
+#sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
                                         
   
-save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, file="/pfs/out/drug_post.RData")
+#save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, file="/pfs/out/drug_post.RData")
 
 
 raw.sensitivity.x <- parallel::splitIndices(nrow(raw.sensitivity), floor(nrow(raw.sensitivity)/1000))
