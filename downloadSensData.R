@@ -136,7 +136,7 @@ rownames(sensitivityInfo) <- sensitivityInfo$experimentIds
 load("/pfs/ctrpv2raw/ctrp_raw.RData")
   
   
-raw.sensitivity <- sensitivityRaw
+raw.sensitivity <- ctrp.sensitivityRaw
                                         
 sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
                                         
