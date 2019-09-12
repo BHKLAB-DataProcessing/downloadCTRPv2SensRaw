@@ -193,7 +193,7 @@ library(parallel)
 
 
 
-options("mc.cores"=nthread)
+# options("mc.cores"=nthread)
 
 # values <- mclapply(sensitivityInfo$experimentIds[1:10], function(x, sensRaw.dt) {
     
