@@ -204,7 +204,7 @@ library(parallel)
 #     return(data)
 
 #   }, sensRaw.dt=sensRaw.dt)
-)
+
 setorder(sensRaw.dt, experimentIds, cpd_conc_umol)
 
 values <- split(sensRaw.dt, by="experimentIds")
@@ -227,33 +227,19 @@ for(n in 1:length(values)){
   }
 
   values[[n]][,experimentIds:=NULL]
-# values[[n]][order("Concentration")]
 
   sensitivityRaw[n, 1:(nrow(values[[n]])), ] <- as.matrix(values[[n]])
 
 }
 
-# sensitivityRaw <- sensitivityRaw[,,c(2,1)]
-# dimnames(sensitivityRaw)[[1]] <- c("Concentration", "Viability")
-
   sensitivityRaw[,,"Viability"] <- sensitivityRaw[,,"Viability"] *100
 
   save(sensitivityRaw, file=file.path(saveres, "ctrpv2.sens.raw.RData"))
-} 
-
-  # concList <- pbapply(sensitivityRaw[,,"Dose"], 1,  function(x) sum(!is.na(x)))
-
-  # ncon <- max(concList)
-
-  # sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
-
-
-# load("/pfs/ctrpv2raw/ctrp_raw.RData")
   
   
 raw.sensitivity <- sensitivityRaw
                                         
-#sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
+sensitivityInfo[,"Number of Doses Tested"] <- concList[rownames(sensitivityInfo)]
                                         
   
 save(raw.sensitivity,sensitivityInfo, ctrp.drugs, ctrp.cells, concList, file="/pfs/out/drug_post.RData")
