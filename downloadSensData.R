@@ -170,19 +170,6 @@ sensitivityInfo[,"media_composition"] <- mediaInfo$media_composition[match(sensi
 rownames(sensitivityInfo) <- sensitivityInfo$experimentIds
 
 
-
-
-
-sensitivityInfo <- data.frame("experimentIds" = unique(experimentIds))
-
-sensitivityInfo[,c("cellid", "drugid","culture_media", "experiment_id")] <- do.call(rbind, strsplit(sensitivityInfo$experimentIds, "_"))
-
-mediaInfo <- read.delim(file.path(path.cell, "v20.meta.media_comp.txt"))
-
-sensitivityInfo[,"media_composition"] <- mediaInfo$media_composition[match(sensitivityInfo$culture_media, mediaInfo$culture_media)]
-
-rownames(sensitivityInfo) <- sensitivityInfo$experimentIds
-
 # all_conc <- unique(ctrp.sensitivityRaw$cpd_conc_umol)
 
 
@@ -232,10 +219,10 @@ for(n in 1:length(values)){
 
 }
 
-  sensitivityRaw[,,"Viability"] <- sensitivityRaw[,,"Viability"] *100
+sensitivityRaw[,,"Viability"] <- sensitivityRaw[,,"Viability"] *100
 
-  save(sensitivityRaw, file=file.path(saveres, "ctrpv2.sens.raw.RData"))
-  
+save(sensitivityRaw, file=file.path(saveres, "ctrpv2.sens.raw.RData"))
+
   
 raw.sensitivity <- sensitivityRaw
                                         
